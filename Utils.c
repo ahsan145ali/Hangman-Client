@@ -62,11 +62,21 @@ char characterInput(char prompt[])
 char* prepareStringForServer(char *st)
 {
     char *temp = malloc(strlen(st) + 2 ); // space for size and null character
+    if(temp == NULL)
+    {
+        perror("Memory Allocation Failed");
+        return NULL;
+    }
     temp[0] = strlen(st); // store size of array at first index
 
      // Copy the string st into temp starting at index 1 (skipping index 0)
     memcpy(temp + 1, st, strlen(st) + 1); // +1 to include the null terminator
 
+    if(temp == NULL )
+    {
+        perror("memcpy function failed\n");
+        return NULL;
+    }
     return temp;
 
 }

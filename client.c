@@ -26,7 +26,7 @@ int main(void)
     char *guessList = NULL; // holds all the characters that were guessed by the user
     char *word = NULL; // this hold the word that needs to be guessed which is filled as user makes correct choices
     int wordSize = - 1; // this holds the size of the word which needs to be guessed which is sent by the server
-    
+    ssize_t res; // stores result bytes of send or recv from server 
     // //create socket
     // if((client_FileDescriptor = socket( AF_INET , SOCK_STREAM , 0)) == -1)
     // {
@@ -56,16 +56,31 @@ int main(void)
     // char ess = characterInput("Enter2 a Letter");
     // printf("Entered character: %c %c" , guess , ess);
 
-   // char *temp= prepareStringForServer(name);
+    //char *nameforServer= prepareStringForServer(name);
 
     //printf("Size stored in temp[0]: %d\n", (unsigned char)temp[0]);
    // printf("String stored in temp starting from temp[1]: %s\n", temp + 1);
 
-    // ssize_t res;
+    // send name to server
+    // if(nameforServer!= NULL)
+    // {
+    //     res = send(client_FileDescriptor, &nameforServer , strlen(nameforServer),0); 
+    //     if(res == -1)
+    //         {
+    //             perror("sending to server failed\n");
+                
+    //         }
+    //         else
+    //         {
+    //             printf("Name %s sent to server\n" , nameforServer +1);
+    //         }
+    // }
+    // get word size from server
     // res = recv(client_FileDescriptor , &wordSize,sizeof(wordSize),0 ); // the first recv from server sends a integer which has size of the word to guess
     // if(res == -1)
     // {
     //     perror("Receive Failed\n");
+    //       exit(EXIT_FAILURE);
     // }
     // else if(res == 0)
     // {
