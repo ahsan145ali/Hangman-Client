@@ -45,12 +45,19 @@ int main(void)
     //     exit(EXIT_FAILURE);
     // }
     // printf("Connected to Server\n");
-    //name = stringInput("Enter Nickname");
-    //printf("Entered Name: %s\n" , name);
+    name = stringInput("Enter Nickname");
+    printf("Entered Name: %s\n" , name);
 
-    guess = characterInput("Enter a Letter");
-    clearInputBuffer();
-    char ess = characterInput("Enter2 a Letter");
-    printf("Entered character: %c %c" , guess , ess);
+    // guess = characterInput("Enter a Letter");
+    // clearInputBuffer();
+    // char ess = characterInput("Enter2 a Letter");
+    // printf("Entered character: %c %c" , guess , ess);
+
+    char *temp= prepareStringForServer(name);
+
+    printf("Size stored in temp[0]: %d\n", (unsigned char)temp[0]);
+    printf("String stored in temp starting from temp[1]: %s\n", temp + 1);
+
+
     return EXIT_SUCCESS;
 }

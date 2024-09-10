@@ -59,4 +59,14 @@ char characterInput(char prompt[])
      }
 
 }
+char* prepareStringForServer(char *st)
+{
+    char *temp = malloc(strlen(st) + 2 ); // space for size and null character
+    temp[0] = strlen(st); // store size of array at first index
 
+     // Copy the string st into temp starting at index 1 (skipping index 0)
+    memcpy(temp + 1, st, strlen(st) + 1); // +1 to include the null terminator
+
+    return temp;
+
+}
