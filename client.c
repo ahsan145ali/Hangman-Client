@@ -27,6 +27,7 @@ int main(void)
     char *word = NULL; // this hold the word that needs to be guessed which is filled as user makes correct choices
     int wordSize = - 1; // this holds the size of the word which needs to be guessed which is sent by the server
     ssize_t res; // stores result bytes of send or recv from server 
+    char *buffer = NULL; // stores received result from server , this is declared when server send lenght of word
     // //create socket
     // if((client_FileDescriptor = socket( AF_INET , SOCK_STREAM , 0)) == -1)
     // {
@@ -53,8 +54,6 @@ int main(void)
 
     // guess = characterInput("Enter a Letter");
     // clearInputBuffer();
-    // char ess = characterInput("Enter2 a Letter");
-    // printf("Entered character: %c %c" , guess , ess);
 
     //char *nameforServer= prepareStringForServer(name);
 
@@ -89,23 +88,70 @@ int main(void)
     // }
     // else
     // {
-        //create array with the size received
-        wordSize = 6;
-        word = malloc((wordSize +1 ) * sizeof(char)); // +1 for NULL character
-        if(word == NULL)
-        {
-            perror("Memory Allocation Failed\n");
-            return EXIT_FAILURE;
-        }
-        //set all elements to '\0'
-       for (int i = 0; i <= wordSize; i++) {
-            word[i] = '\0'; 
-        }
-    
-    //}
-    // while(1)
-    // {
+        //create array with the size received and create buffer with the same size
+    //     wordSize = 6;
+    //     word = malloc((wordSize + 1 ) * sizeof(char)); // +1 for NULL character
+    //     buffer = malloc((wordSize + 1) * sizeof(char));
+    //     if(word == NULL && buffer == NULL)
+    //     {
+    //         perror("Memory Allocation Failed\n");
+    //         return EXIT_FAILURE;
+    //     }
+    //     //set all elements to '\0'
+    //    for (int i = 0; i <= wordSize; i++) {
+    //         word[i] = '\0'; 
+    //         buffer[i] = '\0;
+    //     }
 
-    // }
-    return EXIT_SUCCESS;
+        while(1)
+        {
+            char guess = characterInput("Enter a Letter");
+            clearInputBuffer();
+            addToGuessList(&guessList,guess);
+            printf("Guess List: %s\n" , guessList);
+        }
+    //}
+    //  while(1)
+    //  {
+    //      char guess = characterInput("Enter a Letter");
+    //      clearInputBuffer();
+    //      // send guessed word to server
+    //      res = send(client_FileDescriptor , &guess , sizeof(char),0);
+    //      if(res == -1)
+    //      {
+    //          perror("sending to server failed\n");
+    //      }
+    //      else{
+    //         printf("Letter %c sent to server\n" , guess);
+    //         // after it is successfully sent, wait for server to respond with result
+    //         res = recv(client_FileDescriptor , buffer , strlen(buffer) , 0);
+    //         if(res == -1)
+    //         {
+    //             perror("Error on Receive:\n");
+              
+    //         }
+    //         else if(res == 0)
+    //         {
+    //             printf("Connection Closed\n");
+    //             break;
+    //         }
+    //         else{
+    //             // would receive a bolean char array in buffer here
+    //             int result = checkGuess(word , buffer,guess);
+    //             //store in guess list
+    //             addToGuessList(&guessList,guess);
+    //             if(result == ALL_GUESSED)
+    //             {
+    //                 // send lives to server
+    //             }
+    //             else if(result == INCORRECT_GUESS)
+    //             {
+                    
+    //             }
+
+    //         }
+    //      }
+         
+    //  }
+    // return EXIT_SUCCESS;
 }

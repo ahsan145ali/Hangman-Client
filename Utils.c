@@ -44,18 +44,20 @@ char characterInput(char prompt[])
 {
      char temp ;
      printf("%s : " , prompt);
-     scanf(" %c",&temp); // Adding space before %c to skip any leading whitespace
-     if(isalpha(temp)) 
+     while(1)
      {
-        
-        printf("SUCCESS");
-        return temp;
+        scanf(" %c",&temp); // Adding space before %c to skip any leading whitespace
+        if(isalpha(temp)) 
+        {
+            
+            return temp;
 
-     }else
-     {       
-        printf("Input Failed");
-         return '\0';
+        }else
+        {       
+            printf("Input Failed\n");
+            printf("Enter Again: ");
 
+        }  
      }
 
 }
@@ -79,4 +81,76 @@ char* prepareStringForServer(char *st)
     }
     return temp;
 
+}
+
+int checkAllCorrect(char* resultArray)
+{
+    for(int i=0 ; i<strlen(resultArray) ; i++)
+    {
+        if(resultArray[i] == '\0')
+        {
+            return ALL_NOT_GUESSED; 
+        }
+    }
+    return ALL_GUESSED;
+}
+int checkGuess(char* wordArray , char* resultArray, char guessedWord)
+{   
+    if(checkAllCorrect(resultArray) == ALL_GUESSED) // All words guessed
+    {
+        return ALL_GUESSED;
+    }
+    for(int i=0 ; resultArray[i] != '\0' ; i++)
+    {
+        if(resultArray[i] == '1')
+        {
+            // check if same index in word array is NULL or not
+            // if it is not null then that means it was previous guess else it is new
+            if(wordArray[i] == '\0')
+            {
+                wordArray[i] = guessedWord; //replace with guessed word
+                return CORRECT_GUESS; // correct guess
+            }
+        }
+    }
+    return INCORRECT_GUESS; //wrong guess
+}
+
+int allocateMemory(char **ptr)
+{
+    if (*ptr == NULL) // initial empty
+    {
+        *ptr = malloc(sizeof(char) + 1); // +1 for null character
+        if (*ptr == NULL)
+        {
+            return FUNCTION_FAILED;
+        }
+        (*ptr)[0] = '\0'; // Initialize with null character
+        return FUNCTION_SUCCESS;
+    }
+    else // initial not empty
+    {
+        // Reallocate memory with space for one more character and null terminator
+        *ptr = realloc(*ptr, (strlen(*ptr) + 2) * sizeof(char)); // +2: +1 for NULL, +1 for new character
+        if (*ptr == NULL)
+        {
+            return FUNCTION_FAILED;
+        }
+        return FUNCTION_SUCCESS;
+    }
+}
+
+
+int addToGuessList(char **guesslist , char guessedWord)
+{
+    if (allocateMemory(guesslist) == FUNCTION_FAILED)
+    {
+        perror("Memory Allocation Failed\n");
+        exit(EXIT_FAILURE);
+    }
+    // Find the length of the current string
+    size_t len = strlen(*guesslist);
+    (*guesslist)[len] = guessedWord; // Add the new character
+    (*guesslist)[len + 1] = '\0'; // Null terminate the string
+    return FUNCTION_SUCCESS;
 }
