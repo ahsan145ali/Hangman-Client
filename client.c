@@ -139,6 +139,7 @@ int main(void)
                     playerLives = playerLives - 1 ;
                     if(playerLives == 0) break;// lost , exit loop as no more guess input is needed
                 }
+                printf("guessed letters: %s " , guessList);
                 printf("Word: %s " ,word);
 
             }
