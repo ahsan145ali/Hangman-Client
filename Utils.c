@@ -87,7 +87,7 @@ int checkAllCorrect(char* resultArray)
 {
     for(int i=0 ; i<strlen(resultArray) ; i++)
     {
-        if(resultArray[i] == '\0')
+        if(resultArray[i] == '0')
         {
             return ALL_NOT_GUESSED; 
         }
@@ -100,19 +100,22 @@ int checkGuess(char* wordArray , char* resultArray, char guessedWord)
     {
         return ALL_GUESSED;
     }
-    for(int i=0 ; resultArray[i] != '\0' ; i++)
+    int wasItCorrectGuess = -1;
+    for(int i=0 ; i<strlen(resultArray) ; i++)
     {
         if(resultArray[i] == '1')
         {
-            // check if same index in word array is NULL or not
+            // check if same index in word array is NULL or not which is represented by _
             // if it is not null then that means it was previous guess else it is new
-            if(wordArray[i] == '\0')
+            if(wordArray[i] == '_')
             {
                 wordArray[i] = guessedWord; //replace with guessed word
-                return CORRECT_GUESS; // correct guess
+                wasItCorrectGuess = CORRECT_GUESS;
             }
         }
     }
+    if(wasItCorrectGuess == CORRECT_GUESS) return CORRECT_GUESS;
+    
     return INCORRECT_GUESS; //wrong guess
 }
 
