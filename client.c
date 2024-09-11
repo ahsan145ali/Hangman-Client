@@ -110,17 +110,17 @@ int main(void)
          else{
             printf("Letter %c sent to server\n" , guess);
             // after it is successfully sent, wait for server to respond with result
-            res = recv(client_FileDescriptor , buffer , strlen(buffer) , 0);
+            res = recv(client_FileDescriptor , buffer , sizeof(buffer) , 0);
             if(res == -1)
             {
                 perror("Error on Receive:\n");
               
             }
-            else if(res == 0)
-            {
-                printf("Connection Closed\n");
-                break;
-            }
+            // else if(res == 0 )
+            // {
+            //     printf("Connection Closed\n");
+            //     break;
+            // }
            else{
                 // if receive is success , would receive a bolean char array in buffer here
                 //store in guess list
@@ -139,6 +139,7 @@ int main(void)
                     playerLives = playerLives - 1 ;
                     if(playerLives == 0) break;// lost , exit loop as no more guess input is needed
                 }
+                printf("Word: %s " ,word);
 
             }
          }
