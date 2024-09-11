@@ -100,7 +100,7 @@ int main(void)
     }
      while(1)
      {
-         char guess = characterInput("Enter a Letter");
+         guess = characterInput("Enter a Letter");
          clearInputBuffer();
          //send guessed word to server
          res = send(client_FileDescriptor , &guess , sizeof(char),0);
