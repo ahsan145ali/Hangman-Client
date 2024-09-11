@@ -12,7 +12,7 @@
 
 #include "Utils.h"
 
-#define PORT 4159
+#define PORT 8080
 #define IPADDRESS "127.0.0.1"
 
 int client_FileDescriptor = -1;
@@ -57,7 +57,7 @@ int main(void)
     char *nameforServer= prepareStringForServer(name);
     if(nameforServer!= NULL)
     {
-        res = send(client_FileDescriptor, &nameforServer , strlen(nameforServer),0); 
+        res = send(client_FileDescriptor, nameforServer , strlen(nameforServer),0); 
         if(res == -1)
             {
                 perror("sending to server failed\n");
@@ -83,7 +83,6 @@ int main(void)
     else
     {
         //create array with the size received and create buffer with the same size
-          wordSize = 6; // this would be removed when server connects
           word = malloc((wordSize + 1 ) * sizeof(char)); // +1 for NULL character
           buffer = malloc((wordSize + 1) * sizeof(char));
         if(word == NULL && buffer == NULL)
