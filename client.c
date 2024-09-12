@@ -116,11 +116,11 @@ int main(void)
                 perror("Error on Receive:\n");
               
             }
-            // else if(res == 0 )
-            // {
-            //     printf("Connection Closed\n");
-            //     break;
-            // }
+            else if(res == 0 )
+            {
+                printf("Connection Closed\n");
+                break;
+            }
            else{
                 // if receive is success , would receive a bolean char array in buffer here
                 //store in guess list
@@ -136,16 +136,58 @@ int main(void)
                 else if(result == INCORRECT_GUESS)
                 {
                     printf("Incorrect Guess \n");
-                    playerLives = playerLives - 1 ;
+                    playerLives = playerLives - 1;
+                    printf("Lives Remaining: %d \n" , playerLives);
                     if(playerLives == 0) break;// lost , exit loop as no more guess input is needed
                 }
-                printf("guessed letters: %s " , guessList);
-                printf("Word: %s " ,word);
+                printf("guessed letters: %s \n" , guessList);
+                printf("Word: %s \n" ,word);
 
             }
          }
-            // Prepare to receive Leader Bord
-            printf("\nRemaining Lives: %d\n" , playerLives);
+            
       }
+
+      // Prepare to receive Leader Bord
+            printf("\nRemaining Lives: %d\n" , playerLives);
+            // get the size of leaderboard
+            unsigned char sizeLeaderboard ='\0'; // stores the size of leaderboard
+            char *LeaderBoard = NULL; // Stores the leaderboard
+            res  = recv(client_FileDescriptor , &sizeLeaderboard , sizeof(sizeLeaderboard),0);
+            if(res == -1)
+            {
+                printf("Error on Recieve");
+                exit(EXIT_FAILURE);
+            }
+            else if (res == 0)
+            {
+                printf("Connection Closed");
+                exit(EXIT_SUCCESS);
+            }
+            else
+            {
+                //create array according to size of leaderboard
+                LeaderBoard = malloc(sizeLeaderboard + 1); // +1 for null character
+                LeaderBoard[sizeLeaderboard] = '\0';
+                res = recv(client_FileDescriptor , LeaderBoard , sizeLeaderboard,0 );
+                if(res == -1)
+                {
+                    perror("Error on Receive");
+                    exit(EXIT_FAILURE);
+                }
+                else if( res == 0)
+                {
+                    perror("Connectin Closed");
+                    exit(EXIT_SUCCESS);
+                } 
+                else
+                {
+                    printf("Size of leaderboard: %d \n" , sizeLeaderboard );
+                    printf("------ LEADERBORD --------- \n \n");
+                    printf("%s \n" , LeaderBoard);
+                    
+                }   
+            }
+
      return EXIT_SUCCESS;
 }
