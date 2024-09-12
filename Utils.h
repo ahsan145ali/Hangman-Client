@@ -62,5 +62,6 @@ int allocateMemory(char **ptr);
 /// @param lives current lives of the user
 void Hungman(int lives);
 
+/// @brief clear terminal
 void clearTerminal();
 #endif // UTILS_H

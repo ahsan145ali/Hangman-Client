@@ -185,7 +185,7 @@ int main(void)
             {
                 //create array according to size of leaderboard
                 LeaderBoard = malloc(sizeLeaderboard + 1); // +1 for null character
-                LeaderBoard[sizeLeaderboard] = '\0';
+                LeaderBoard[sizeLeaderboard] = '\0'; // set last index to null
                 // get the leaderboard
                 res = recv(client_FileDescriptor , LeaderBoard , sizeLeaderboard,0 );
                 if(res == -1)
