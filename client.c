@@ -73,11 +73,13 @@ int main(void)
     if(res == -1)
     {
         perror("Receive Failed\n");
+        close(client_FileDescriptor);
           exit(EXIT_FAILURE);
     }
     else if(res == 0)
     {
         printf("Connection Closed");
+        close(client_FileDescriptor);
         exit(EXIT_SUCCESS);
     }
     else
@@ -88,6 +90,7 @@ int main(void)
         if(word == NULL && buffer == NULL)
         {
             perror("Memory Allocation Failed\n");
+            close(client_FileDescriptor);
             return EXIT_FAILURE;
         }
         //set all elements to '\0'
@@ -119,6 +122,7 @@ int main(void)
             else if(res == 0 )
             {
                 printf("Connection Closed\n");
+                close(client_FileDescriptor);
                 break;
             }
            else{
@@ -163,11 +167,13 @@ int main(void)
             if(res == -1)
             {
                 printf("Error on Recieve");
+                close(client_FileDescriptor);
                 exit(EXIT_FAILURE);
             }
             else if (res == 0)
             {
                 printf("Connection Closed");
+                close(client_FileDescriptor);
                 exit(EXIT_SUCCESS);
             }
             else
@@ -179,117 +185,25 @@ int main(void)
                 if(res == -1)
                 {
                     perror("Error on Receive");
+                    close(client_FileDescriptor);
                     exit(EXIT_FAILURE);
                 }
                 else if( res == 0)
                 {
                     perror("Connectin Closed");
+                    close(client_FileDescriptor);
                     exit(EXIT_SUCCESS);
                 } 
                 else
                 {
-                    printf("Size of leaderboard: %d \n" , sizeLeaderboard );
                     printf("------ LEADERBORD --------- \n \n");
                     printf("%s \n" , LeaderBoard);
                     
                 }   
             }
 
+     close(client_FileDescriptor);
      return EXIT_SUCCESS;
 }
 
- void Hungman(int lives){
-    switch (lives) {
-    case 7:
-
-        printf("      |\n");
-        printf("      |\n");
-        printf("      |\n");
-        printf("      |\n");
-        printf("      |\n");
-        printf("      |\n");
-        printf("=========\n");
-
-        break;
-    case 6:
-    
-        printf("  +---+\n");
-        printf("      |\n");
-        printf("      |\n");
-        printf("      |\n");
-        printf("      |\n");
-        printf("      |\n");
-        printf("=========\n");
-
-        break;
-    case 5:
-
-        printf("  +---+\n");
-        printf("  |   |\n");
-        printf("      |\n");
-        printf("      |\n");
-        printf("      |\n");
-        printf("      |\n");
-        printf("=========\n");
-
-        break;
-    
-    case 4:
-
-        printf("  +---+\n");
-        printf("  |   |\n");
-        printf("  O   |\n");
-        printf("      |\n");
-        printf("      |\n");
-        printf("      |\n");
-        printf("=========\n");
-
-        break;
-    case 3:
-        printf("  +---+\n");
-        printf("  |   |\n");
-        printf("  O   |\n");
-        printf("  |   |\n");
-        printf("      |\n");
-        printf("      |\n");
-        printf("=========\n");
-     
-        break;
-    case 2:
-        printf("  +---+\n");
-        printf("  |   |\n");
-        printf("  O   |\n");
-        printf(" /|\\   |\n");
-        printf("      |\n");
-        printf("      |\n");
-        printf("=========\n");
-     
-
-        break;
-    case 1:
-        printf("  +---+\n");
-        printf("  |   |\n");
-        printf("  O   |\n");
-        printf(" /|\\  |\n");
-        printf(" /    |\n");
-        printf("      |\n");
-        printf("=========\n");
-     
-        break;
-    case 0:
-        printf("  +---+\n");
-        printf("  |   |\n");
-        printf("  O   |\n");
-        printf(" /|\\  |\n");
-        printf(" / \\  |\n");
-        printf("      |\n");
-        printf("GAME OVER!\n");
-        printf("=========\n");
-
-        break;
-
-     
-        break;
-
-}
- }
+ 
