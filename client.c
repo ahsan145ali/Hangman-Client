@@ -140,6 +140,10 @@ int main(void)
                     printf("Lives Remaining: %d \n" , playerLives);
                     if(playerLives == 0) break;// lost , exit loop as no more guess input is needed
                 }
+                else if(result == CORRECT_GUESS)
+                {
+                    printf("Lives Remaining: %d \n" , playerLives);
+                }
                 printf("guessed letters: %s \n" , guessList);
                 printf("Word: %s \n" ,word);
 
@@ -149,7 +153,7 @@ int main(void)
       }
 
       // Prepare to receive Leader Bord
-            printf("\nRemaining Lives: %d\n" , playerLives);
+            printf("\nFinished with Lives Remaining : %d\n" , playerLives);
             // get the size of leaderboard
             unsigned char sizeLeaderboard ='\0'; // stores the size of leaderboard
             char *LeaderBoard = NULL; // Stores the leaderboard
