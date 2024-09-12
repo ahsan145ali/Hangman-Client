@@ -162,53 +162,60 @@ int main(void)
             
       }
 
-      // Prepare to receive Leader Bord
+        // Prepare to receive Leaderboard
+        printf("\nPoints earned: %d\n\n", playerLives + wordSize);
 
-            printf("Points earned: %d\n\n" , playerLives+wordSize);
-            // get the size of leaderboard
-            unsigned char sizeLeaderboard ='\0'; // stores the size of leaderboard
-            char *LeaderBoard = NULL; // Stores the leaderboard
-            res  = recv(client_FileDescriptor , &sizeLeaderboard , sizeof(sizeLeaderboard),0);
-            if(res == -1)
-            {
-                printf("Error on Recieve");
+        // Step 1: Get the size of the leaderboard
+        unsigned char sizeLeaderboard = '\0'; // stores the size of leaderboard
+        char *LeaderBoard = NULL; // Stores the leaderboard
+        res = recv(client_FileDescriptor, &sizeLeaderboard, sizeof(sizeLeaderboard), 0);
+        if (res == -1) {
+            perror("Error on Receive");
+            close(client_FileDescriptor);
+            exit(EXIT_FAILURE);
+        } else if (res == 0) {
+            printf("Connection Closed");
+            close(client_FileDescriptor);
+            exit(EXIT_SUCCESS);
+        }
+
+        // Step 2: Allocate enough space for the leaderboard
+        LeaderBoard = malloc(sizeLeaderboard + 1); // +1 for null terminator
+        if (LeaderBoard == NULL) {
+            perror("Memory allocation failed");
+            close(client_FileDescriptor);
+            exit(EXIT_FAILURE);
+        }
+
+        // Step 3: Receive the actual leaderboard
+        int bytes_received = 0;
+        while (bytes_received < sizeLeaderboard) {
+            res = recv(client_FileDescriptor, LeaderBoard + bytes_received, sizeLeaderboard - bytes_received, 0);
+            if (res == -1) {
+                perror("Error on Receive");
                 close(client_FileDescriptor);
+                free(LeaderBoard);
                 exit(EXIT_FAILURE);
-            }
-            else if (res == 0)
-            {
+            } else if (res == 0) {
                 printf("Connection Closed");
                 close(client_FileDescriptor);
+                free(LeaderBoard);
                 exit(EXIT_SUCCESS);
             }
-            else
-            {
-                //create array according to size of leaderboard
-                LeaderBoard = malloc(sizeLeaderboard + 1); // +1 for null character
-                LeaderBoard[sizeLeaderboard] = '\0';
-                // get the leaderboard
-                res = recv(client_FileDescriptor , LeaderBoard , sizeLeaderboard,0 );
-                if(res == -1)
-                {
-                    perror("Error on Receive");
-                    close(client_FileDescriptor);
-                    exit(EXIT_FAILURE);
-                }
-                else if( res == 0)
-                {
-                    perror("Connectin Closed");
-                    close(client_FileDescriptor);
-                    exit(EXIT_SUCCESS);
-                } 
-                else
-                {
-                    printf("------ LEADERBOARD --------- \n \n");
-                    printf("%s \n" , LeaderBoard);
-                    
-                }   
-            }
+            bytes_received += res;
+        }
 
-     close(client_FileDescriptor);
-     return EXIT_SUCCESS;
-}
+        // Step 4: Null-terminate the string
+        LeaderBoard[sizeLeaderboard] = '\0';  // Null terminate the received leaderboard string
+
+        // Step 5: Print the leaderboard
+        printf("------ LEADERBOARD ---------\n\n");
+        printf("%s\n", LeaderBoard);
+
+        // Free the allocated memory
+        free(LeaderBoard);
+
+        close(client_FileDescriptor);
+
+        }
 
