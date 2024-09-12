@@ -12,16 +12,16 @@
 
 #include "Utils.h"
 
-#define PORT 8080
-#define IPADDRESS "127.0.0.1"
+#define PORT 8080 // port of the server
+#define IPADDRESS "127.0.0.1" // IP address
 
-int client_FileDescriptor = -1;
-unsigned short int playerLives = 8;
+int client_FileDescriptor = -1; // client file descriptor
+unsigned short int playerLives = 8; // stores lives of the player
 
 void tobedeletedlater(char , char*);
 int main(void)
 {
-    struct sockaddr_in server_address;
+    struct sockaddr_in server_address; // hols the address of the server
     char *name = NULL; // holds the name of the user
     char guess = '\0'; // holds the character that was guessed by the user
     char *guessList = NULL; // holds all the characters that were guessed by the user
@@ -50,11 +50,11 @@ int main(void)
         exit(EXIT_FAILURE);
     }
     printf("Connected to Server\n");
-    name = stringInput("Enter Nickname");
+    name = stringInput("Enter Nickname"); // get nickname from the user
     printf("Entered Name: %s\n" , name);
 
     // send name to server
-    char *nameforServer= prepareStringForServer(name);
+    char *nameforServer= prepareStringForServer(name); // convert name entered to the format expected by the server
     if(nameforServer!= NULL)
     {
         res = send(client_FileDescriptor, nameforServer , strlen(nameforServer),0); 
@@ -86,7 +86,7 @@ int main(void)
     {
         //create array with the size received and create buffer with the same size
           word = malloc((wordSize + 1 ) * sizeof(char)); // +1 for NULL character
-          buffer = malloc((wordSize + 1) * sizeof(char));
+          buffer = malloc((wordSize + 1) * sizeof(char)); // +1 for NULL character
         if(word == NULL && buffer == NULL)
         {
             perror("Memory Allocation Failed\n");
@@ -102,8 +102,8 @@ int main(void)
     }
      while(1)
      {
-         guess = characterInput("Enter a Letter");
-         clearInputBuffer();
+         guess = characterInput("Enter a Letter"); // get guess character input from user
+         clearInputBuffer(); // clear newline left in buffer
          //send guessed word to server
          res = send(client_FileDescriptor , &guess , sizeof(char),0);
          if(res == -1)
@@ -129,7 +129,7 @@ int main(void)
                 // if receive is success , would receive a bolean char array in buffer here
                 //store in guess list
                 addToGuessList(&guessList,guess);
-                int result = checkGuess(word , buffer,guess);
+                int result = checkGuess(word , buffer,guess); // check if the guessed characte was right or wrong
                 if(result == ALL_GUESSED)
                 {
                     // send lives to server
@@ -140,9 +140,9 @@ int main(void)
                 else if(result == INCORRECT_GUESS)
                 {
                     printf("Incorrect Guess \n");
-                    playerLives = playerLives - 1;
+                    playerLives = playerLives - 1; // Decrement lives on wrong guess
                     printf("Lives Remaining: %d \n" , playerLives);
-                    Hungman(playerLives);
+                    Hungman(playerLives); // print hangman hanging due to wrong choice consequences
                     if(playerLives == 0) break;// lost , exit loop as no more guess input is needed
                 }
                 else if(result == CORRECT_GUESS)
@@ -181,6 +181,7 @@ int main(void)
                 //create array according to size of leaderboard
                 LeaderBoard = malloc(sizeLeaderboard + 1); // +1 for null character
                 LeaderBoard[sizeLeaderboard] = '\0';
+                // get the leaderboard
                 res = recv(client_FileDescriptor , LeaderBoard , sizeLeaderboard,0 );
                 if(res == -1)
                 {
