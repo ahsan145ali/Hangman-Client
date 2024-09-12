@@ -253,3 +253,14 @@ void Hungman(int lives){
 
 }
  }
+
+ void clearTerminal(void) {
+#ifdef _WIN32
+    system("cls");  // For Windows
+#else
+    system("clear");  // For Linux/macOS
+#endif
+}
+
+
+ 
