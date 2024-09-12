@@ -73,11 +73,13 @@ int main(void)
     if(res == -1)
     {
         perror("Receive Failed\n");
+        close(client_FileDescriptor);
           exit(EXIT_FAILURE);
     }
     else if(res == 0)
     {
         printf("Connection Closed");
+        close(client_FileDescriptor);
         exit(EXIT_SUCCESS);
     }
     else
@@ -88,6 +90,7 @@ int main(void)
         if(word == NULL && buffer == NULL)
         {
             perror("Memory Allocation Failed\n");
+            close(client_FileDescriptor);
             return EXIT_FAILURE;
         }
         //set all elements to '\0'
@@ -119,6 +122,7 @@ int main(void)
             else if(res == 0 )
             {
                 printf("Connection Closed\n");
+                close(client_FileDescriptor);
                 break;
             }
            else{
@@ -167,11 +171,13 @@ int main(void)
             if(res == -1)
             {
                 printf("Error on Recieve");
+                close(client_FileDescriptor);
                 exit(EXIT_FAILURE);
             }
             else if (res == 0)
             {
                 printf("Connection Closed");
+                close(client_FileDescriptor);
                 exit(EXIT_SUCCESS);
             }
             else
@@ -183,11 +189,13 @@ int main(void)
                 if(res == -1)
                 {
                     perror("Error on Receive");
+                    close(client_FileDescriptor);
                     exit(EXIT_FAILURE);
                 }
                 else if( res == 0)
                 {
-                    perror("Connection Closed");
+                    perror("Connectin Closed");
+                    close(client_FileDescriptor);
                     exit(EXIT_SUCCESS);
                 } 
                 else
@@ -198,6 +206,7 @@ int main(void)
                 }   
             }
 
+     close(client_FileDescriptor);
      return EXIT_SUCCESS;
 }
 
