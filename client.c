@@ -138,9 +138,11 @@ int main(void)
                     printf("Incorrect Guess \n");
                     playerLives = playerLives - 1;
                     printf("Lives Remaining: %d \n" , playerLives);
+                    Hungman(playerLives);
                     if(playerLives == 0) break;// lost , exit loop as no more guess input is needed
                 }
                 printf("guessed letters: %s \n" , guessList);
+                printf("Lives Remaining: %d \n" , playerLives);
                 printf("Word: %s \n" ,word);
 
             }
@@ -191,3 +193,99 @@ int main(void)
 
      return EXIT_SUCCESS;
 }
+
+ void Hungman(int lives){
+    switch (lives) {
+    case 7:
+
+        printf("      |\n");
+        printf("      |\n");
+        printf("      |\n");
+        printf("      |\n");
+        printf("      |\n");
+        printf("      |\n");
+        printf("=========\n");
+
+        break;
+    case 6:
+    
+        printf("  +---+\n");
+        printf("      |\n");
+        printf("      |\n");
+        printf("      |\n");
+        printf("      |\n");
+        printf("      |\n");
+        printf("=========\n");
+
+        break;
+    case 5:
+
+        printf("  +---+\n");
+        printf("  |   |\n");
+        printf("      |\n");
+        printf("      |\n");
+        printf("      |\n");
+        printf("      |\n");
+        printf("=========\n");
+
+        break;
+    
+    case 4:
+
+        printf("  +---+\n");
+        printf("  |   |\n");
+        printf("  O   |\n");
+        printf("      |\n");
+        printf("      |\n");
+        printf("      |\n");
+        printf("=========\n");
+
+        break;
+    case 3:
+        printf("  +---+\n");
+        printf("  |   |\n");
+        printf("  O   |\n");
+        printf("  |   |\n");
+        printf("      |\n");
+        printf("      |\n");
+        printf("=========\n");
+     
+        break;
+    case 2:
+        printf("  +---+\n");
+        printf("  |   |\n");
+        printf("  O   |\n");
+        printf(" /|\\   |\n");
+        printf("      |\n");
+        printf("      |\n");
+        printf("=========\n");
+     
+
+        break;
+    case 1:
+        printf("  +---+\n");
+        printf("  |   |\n");
+        printf("  O   |\n");
+        printf(" /|\\  |\n");
+        printf(" /    |\n");
+        printf("      |\n");
+        printf("=========\n");
+     
+        break;
+    case 0:
+        printf("  +---+\n");
+        printf("  |   |\n");
+        printf("  O   |\n");
+        printf(" /|\\  |\n");
+        printf(" / \\  |\n");
+        printf("      |\n");
+        printf("GAME OVER!\n");
+        printf("=========\n");
+
+        break;
+
+     
+        break;
+
+}
+ }
