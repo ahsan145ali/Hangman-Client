@@ -1,6 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+// enum to represent the result of the comparison
 typedef enum {
     CORRECT_GUESS,    // 0
     INCORRECT_GUESS,  // 1
@@ -9,6 +10,7 @@ typedef enum {
     ALL_NOT_GUESSED   // 4    
 } GuessStatus;
 
+// enum to represent return status of the function
 typedef enum {
     FUNCTION_SUCCESS,    // 0
     FUNCTION_FAILED     // 1
