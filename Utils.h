@@ -24,4 +24,5 @@ int checkGuess(char* wordArray , char* resultArray , char guessedWord);
 int addToGuessList(char **guesslist , char guessedWord);
 int allocateMemory(char **ptr);
 void Hungman(int lives);
+void clearTerminal();
 #endif // UTILS_H

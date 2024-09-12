@@ -18,7 +18,7 @@
 int client_FileDescriptor = -1;
 unsigned short int playerLives = 8;
 
-void tobedeletedlater(char , char*);
+
 int main(void)
 {
     struct sockaddr_in server_address;
@@ -130,7 +130,9 @@ int main(void)
                 {
                     // send lives to server
                     // break out of loop , and prepare to receive LeaderBoard
-                    printf("All Guessed\n");
+                    
+                    clearTerminal();
+                    Hungman(playerLives);
                     break;
                 }
                 else if(result == INCORRECT_GUESS)
@@ -138,13 +140,14 @@ int main(void)
                     printf("Incorrect Guess \n");
                     playerLives = playerLives - 1;
                     printf("Lives Remaining: %d \n" , playerLives);
+                    clearTerminal();
                     Hungman(playerLives);
                     if(playerLives == 0) break;// lost , exit loop as no more guess input is needed
                 }
-                else if(result == CORRECT_GUESS)
-                {
-                    printf("Lives Remaining: %d \n" , playerLives);
-                }
+                
+                
+                clearTerminal();
+                Hungman(playerLives);
                 printf("guessed letters: %s \n" , guessList);
                 printf("Lives Remaining: %d \n" , playerLives);
                 printf("Word: %s \n" ,word);
@@ -155,7 +158,8 @@ int main(void)
       }
 
       // Prepare to receive Leader Bord
-            printf("\nFinished with Lives Remaining : %d\n" , playerLives);
+
+            printf("Points earned: %d\n\n" , playerLives+wordSize);
             // get the size of leaderboard
             unsigned char sizeLeaderboard ='\0'; // stores the size of leaderboard
             char *LeaderBoard = NULL; // Stores the leaderboard
@@ -183,13 +187,12 @@ int main(void)
                 }
                 else if( res == 0)
                 {
-                    perror("Connectin Closed");
+                    perror("Connection Closed");
                     exit(EXIT_SUCCESS);
                 } 
                 else
                 {
-                    printf("Size of leaderboard: %d \n" , sizeLeaderboard );
-                    printf("------ LEADERBORD --------- \n \n");
+                    printf("------ LEADERBOARD --------- \n \n");
                     printf("%s \n" , LeaderBoard);
                     
                 }   
@@ -198,10 +201,32 @@ int main(void)
      return EXIT_SUCCESS;
 }
 
+void clearTerminal(void) {
+#ifdef _WIN32
+    system("cls");  // For Windows
+#else
+    system("clear");  // For Linux/macOS
+#endif
+}
+
+
  void Hungman(int lives){
     switch (lives) {
-    case 7:
+    case 8:
+        printf("\n");
+        printf("      \n");
+        printf("      \n");
+        printf("      \n");
+        printf("      \n");
+        printf("      \n");
+        printf("      \n");
+        printf("=========\n");
+        printf("\n");
+        break;
 
+
+    case 7:
+        printf("\n");
         printf("      |\n");
         printf("      |\n");
         printf("      |\n");
@@ -209,10 +234,11 @@ int main(void)
         printf("      |\n");
         printf("      |\n");
         printf("=========\n");
+        printf("\n");
 
         break;
     case 6:
-    
+        printf("\n");
         printf("  +---+\n");
         printf("      |\n");
         printf("      |\n");
@@ -220,10 +246,11 @@ int main(void)
         printf("      |\n");
         printf("      |\n");
         printf("=========\n");
+        printf("\n");
 
         break;
     case 5:
-
+        printf("\n");
         printf("  +---+\n");
         printf("  |   |\n");
         printf("      |\n");
@@ -231,11 +258,12 @@ int main(void)
         printf("      |\n");
         printf("      |\n");
         printf("=========\n");
+        printf("\n");
 
         break;
     
     case 4:
-
+        printf("\n");
         printf("  +---+\n");
         printf("  |   |\n");
         printf("  O   |\n");
@@ -243,9 +271,11 @@ int main(void)
         printf("      |\n");
         printf("      |\n");
         printf("=========\n");
+        printf("\n");
 
         break;
     case 3:
+        printf("\n");
         printf("  +---+\n");
         printf("  |   |\n");
         printf("  O   |\n");
@@ -253,20 +283,24 @@ int main(void)
         printf("      |\n");
         printf("      |\n");
         printf("=========\n");
+        printf("\n");
      
         break;
     case 2:
+        printf("\n");
         printf("  +---+\n");
         printf("  |   |\n");
         printf("  O   |\n");
-        printf(" /|\\   |\n");
+        printf(" /|\\ |\n");
         printf("      |\n");
         printf("      |\n");
         printf("=========\n");
+        printf("\n");
      
 
         break;
     case 1:
+        printf("\n");
         printf("  +---+\n");
         printf("  |   |\n");
         printf("  O   |\n");
@@ -274,17 +308,20 @@ int main(void)
         printf(" /    |\n");
         printf("      |\n");
         printf("=========\n");
+        printf("\n");
      
         break;
     case 0:
+        printf("\n");
         printf("  +---+\n");
         printf("  |   |\n");
         printf("  O   |\n");
         printf(" /|\\  |\n");
         printf(" / \\  |\n");
         printf("      |\n");
-        printf("GAME OVER!\n");
         printf("=========\n");
+        printf("GAME OVER!\n");
+        printf("\n");
 
         break;
 
