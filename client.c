@@ -137,6 +137,7 @@ int main(void)
                     
                     clearTerminal();
                     Hungman(playerLives);
+                    printf("\nPoints earned: %d\n\n", playerLives + wordSize);
                     break;
                 }
                 else if(result == INCORRECT_GUESS)
@@ -146,8 +147,10 @@ int main(void)
                     printf("Lives Remaining: %d \n" , playerLives);
                     clearTerminal();
                     Hungman(playerLives);
-                    Hungman(playerLives); // print hangman hanging due to wrong choice consequences
-                    if(playerLives == 0) break;// lost , exit loop as no more guess input is needed
+                    if(playerLives == 0){
+                    printf("\nPoints earned: 0\n\n");
+                    break;// lost , exit loop as no more guess input is needed
+                    }
                 }
                 
                 
@@ -163,7 +166,6 @@ int main(void)
       }
 
         // Prepare to receive Leaderboard
-        printf("\nPoints earned: %d\n\n", playerLives + wordSize);
 
         // Step 1: Get the size of the leaderboard
         unsigned char sizeLeaderboard = '\0'; // stores the size of leaderboard
