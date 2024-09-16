@@ -178,31 +178,7 @@ int main(void)
             close(client_FileDescriptor);
             exit(EXIT_SUCCESS);
         }
-
-        // Step 2: Allocate enough space for the leaderboard
-        LeaderBoard = malloc(sizeLeaderboard + 1); // +1 for null terminator
-        if (LeaderBoard == NULL) {
-            perror("Memory allocation failed");
-            close(client_FileDescriptor);
-            exit(EXIT_FAILURE);
-        }
-
-        // Step 3: Receive the actual leaderboard
-        int bytes_received = 0;
-        while (bytes_received < sizeLeaderboard) {
-            res = recv(client_FileDescriptor, LeaderBoard + bytes_received, sizeLeaderboard - bytes_received, 0);
-            if (res == -1) {
-                perror("Error on Receive");
-                close(client_FileDescriptor);
-                free(LeaderBoard);
-                exit(EXIT_FAILURE);
-            } else if (res == 0) {
-                printf("Connection Closed");
-                close(client_FileDescriptor);
-                free(LeaderBoard);
-                exit(EXIT_SUCCESS);
-            }
-            else
+        else
             {
                 //create array according to size of leaderboard
                 LeaderBoard = malloc(sizeLeaderboard + 1); // +1 for null character
@@ -217,7 +193,7 @@ int main(void)
                 }
                 else if( res == 0)
                 {
-                    perror("Connectin Closed");
+                    perror("Connectin Closed , Could not get Leaderboard, Error: \n");
                     close(client_FileDescriptor);
                     exit(EXIT_SUCCESS);
                 } 
@@ -226,11 +202,11 @@ int main(void)
                     printf("------ LEADERBOARD --------- \n \n");
                     printf("%s \n" , LeaderBoard);
                     
-                }   
-            }
+                } 
+            }  
+            
 
      close(client_FileDescriptor);
      return EXIT_SUCCESS;
 }
 
-}
