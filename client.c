@@ -73,6 +73,8 @@ int main(void)
 
     while (1) // Loop for multiple rounds
     {
+        playerLives = 8;
+        guessList = NULL;
         //get word size from server
         res = recv(client_FileDescriptor , &wordSize, sizeof(wordSize), 0 ); // the first recv from server sends an integer which has size of the word to guess
         if(res == -1)
