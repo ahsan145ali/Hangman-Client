@@ -43,7 +43,7 @@ void clearInputBuffer(void)
 char characterInput(char prompt[])
 {
      char temp ;
-     printf("%s : " , prompt);
+     printf("%s: " , prompt);
      while(1)
      {
         scanf(" %c",&temp); // Adding space before %c to skip any leading whitespace
