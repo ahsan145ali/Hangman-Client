@@ -28,21 +28,23 @@ int main(void)
     char *word = NULL; // this hold the word that needs to be guessed which is filled as user makes correct choices
     int wordSize = - 1; // this holds the size of the word which needs to be guessed which is sent by the server
     ssize_t res; // stores result bytes of send or recv from server 
-    char *buffer = NULL; // stores received result from server , this is declared when server send lenght of word
+    char *buffer = NULL; // stores received result from server , this is declared when server send length of word
+
     //create socket
     if((client_FileDescriptor = socket( AF_INET , SOCK_STREAM , 0)) == -1)
     {
         perror("Socket creation failed\n");
         exit(EXIT_FAILURE);
     }
-     printf("Socket Created\n");
+    printf("Socket Created\n");
 
-     //setting socket structure
+    //setting socket structure
     server_address.sin_family = AF_INET;
     server_address.sin_port = htons(PORT);
-    inet_pton(AF_INET,IPADDRESS,&server_address.sin_addr);
+    inet_pton(AF_INET, IPADDRESS, &server_address.sin_addr);
 
-    socklen_t len  = sizeof(server_address);
+    socklen_t len = sizeof(server_address);
+    
     //connect to server  
     if((connect(client_FileDescriptor , (struct sockaddr*)&server_address , len)) == -1)
     {
@@ -50,6 +52,7 @@ int main(void)
         exit(EXIT_FAILURE);
     }
     printf("Connected to Server\n");
+
     name = stringInput("Enter Nickname"); // get nickname from the user
     printf("Entered Name: %s\n" , name);
 
@@ -57,117 +60,118 @@ int main(void)
     char *nameforServer= prepareStringForServer(name); // convert name entered to the format expected by the server
     if(nameforServer!= NULL)
     {
-        res = send(client_FileDescriptor, nameforServer , strlen(nameforServer),0); 
+        res = send(client_FileDescriptor, nameforServer , strlen(nameforServer), 0); 
         if(res == -1)
+        {
+            perror("sending to server failed\n");
+        }
+        else
+        {
+            printf("Name %s sent to server\n" , nameforServer +1);
+        }
+    }
+
+    while (1) // Loop for multiple rounds
+    {
+        //get word size from server
+        res = recv(client_FileDescriptor , &wordSize, sizeof(wordSize), 0 ); // the first recv from server sends an integer which has size of the word to guess
+        if(res == -1)
+        {
+            perror("Receive Failed\n");
+            close(client_FileDescriptor);
+            exit(EXIT_FAILURE);
+        }
+        else if(res == 0)
+        {
+            printf("Connection Closed");
+            close(client_FileDescriptor);
+            exit(EXIT_SUCCESS);
+        }
+        else
+        {
+            //create array with the size received and create buffer with the same size
+            word = malloc((wordSize + 1 ) * sizeof(char)); // +1 for NULL character
+            buffer = malloc((wordSize + 1) * sizeof(char)); // +1 for NULL character
+            if(word == NULL || buffer == NULL)
+            {
+                perror("Memory Allocation Failed\n");
+                close(client_FileDescriptor);
+                return EXIT_FAILURE;
+            }
+            //set all elements to '\0'
+            for (int i = 0; i <= wordSize; i++) {
+                word[i] = '_'; // set it underscore to simulate not guessed word
+                buffer[i] = '\0'; // set to null as it received by the server
+            }
+            word[wordSize] = '\0'; // set last index to null
+        }
+
+        // Play one round
+        while(1)
+        {
+            guess = characterInput("Enter a Letter"); // get guess character input from user
+            clearInputBuffer(); // clear newline left in buffer
+            
+            //send guessed word to server
+            res = send(client_FileDescriptor , &guess , sizeof(char), 0);
+            if(res == -1)
             {
                 perror("sending to server failed\n");
-                
             }
             else
             {
-                printf("Name %s sent to server\n" , nameforServer +1);
-            }
-    }
-    //get word size from server
-    res = recv(client_FileDescriptor , &wordSize,sizeof(wordSize),0 ); // the first recv from server sends a integer which has size of the word to guess
-    if(res == -1)
-    {
-        perror("Receive Failed\n");
-        close(client_FileDescriptor);
-          exit(EXIT_FAILURE);
-    }
-    else if(res == 0)
-    {
-        printf("Connection Closed");
-        close(client_FileDescriptor);
-        exit(EXIT_SUCCESS);
-    }
-    else
-    {
-        //create array with the size received and create buffer with the same size
-          word = malloc((wordSize + 1 ) * sizeof(char)); // +1 for NULL character
-          buffer = malloc((wordSize + 1) * sizeof(char)); // +1 for NULL character
-        if(word == NULL && buffer == NULL)
-        {
-            perror("Memory Allocation Failed\n");
-            close(client_FileDescriptor);
-            return EXIT_FAILURE;
-        }
-        //set all elements to '\0'
-        for (int i = 0; i <= wordSize; i++) {
-            word[i] = '_'; // set it underscore to simulate not guessed word
-            buffer[i] = '\0'; // set to null as it received by the server
-         }
-       word[wordSize] = '\0'; // set last index to null
-    }
-     while(1)
-     {
-         guess = characterInput("Enter a Letter"); // get guess character input from user
-         clearInputBuffer(); // clear newline left in buffer
-         //send guessed word to server
-         res = send(client_FileDescriptor , &guess , sizeof(char),0);
-         if(res == -1)
-         {
-             perror("sending to server failed\n");
-         }
-         else{
-            printf("Letter %c sent to server\n" , guess);
-            // after it is successfully sent, wait for server to respond with result
-            res = recv(client_FileDescriptor , buffer , sizeof(buffer) , 0);
-            if(res == -1)
-            {
-                perror("Error on Receive:\n");
-              
-            }
-            else if(res == 0 )
-            {
-                printf("Connection Closed\n");
-                close(client_FileDescriptor);
-                break;
-            }
-           else{
-                // if receive is success , would receive a bolean char array in buffer here
-                //store in guess list
-                addToGuessList(&guessList,guess);
-                int result = checkGuess(word , buffer,guess); // check if the guessed characte was right or wrong
-                if(result == ALL_GUESSED)
+                printf("Letter %c sent to server\n" , guess);
+                
+                // after it is successfully sent, wait for server to respond with result
+                res = recv(client_FileDescriptor , buffer , wordSize , 0);
+                if(res == -1)
                 {
-                    // send lives to server
-                    // break out of loop , and prepare to receive LeaderBoard
+                    perror("Error on Receive:\n");
+                }
+                else if(res == 0 )
+                {
+                    printf("Connection Closed\n");
+                    close(client_FileDescriptor);
+                    break;
+                }
+                else
+                {
+                    // if receive is success, would receive a boolean char array in buffer here
+                    addToGuessList(&guessList, guess);
+                    int result = checkGuess(word , buffer, guess); // check if the guessed character was right or wrong
+                    if(result == ALL_GUESSED)
+                    {
+                        // send lives to server
+                        // break out of loop, and prepare to receive LeaderBoard
+                        clearTerminal();
+                        Hungman(playerLives);
+                        printf("\nPoints earned: %d\n\n", playerLives + wordSize);
+                        break;
+                    }
+                    else if(result == INCORRECT_GUESS)
+                    {
+                        printf("Incorrect Guess \n");
+                        playerLives = playerLives - 1; // Decrement lives on wrong guess
+                        printf("Lives Remaining: %d \n" , playerLives);
+                        clearTerminal();
+                        Hungman(playerLives);
+                        if(playerLives == 0)
+                        {
+                            printf("\nPoints earned: 0\n\n");
+                            break; // lost, exit loop as no more guess input is needed
+                        }
+                    }
                     
                     clearTerminal();
                     Hungman(playerLives);
-                    printf("\nPoints earned: %d\n\n", playerLives + wordSize);
-                    break;
-                }
-                else if(result == INCORRECT_GUESS)
-                {
-                    printf("Incorrect Guess \n");
-                    playerLives = playerLives - 1; // Decrement lives on wrong guess
+                    printf("guessed letters: %s \n" , guessList);
                     printf("Lives Remaining: %d \n" , playerLives);
-                    clearTerminal();
-                    Hungman(playerLives);
-                    if(playerLives == 0){
-                    printf("\nPoints earned: 0\n\n");
-                    break;// lost , exit loop as no more guess input is needed
-                    }
+                    printf("Word: %s \n" , word);
                 }
-                
-                
-                clearTerminal();
-                Hungman(playerLives);
-                printf("guessed letters: %s \n" , guessList);
-                printf("Lives Remaining: %d \n" , playerLives);
-                printf("Word: %s \n" ,word);
-
             }
-         }
-            
-      }
+        }
 
         // Prepare to receive Leaderboard
-
-        // Step 1: Get the size of the leaderboard
         unsigned char sizeLeaderboard = '\0'; // stores the size of leaderboard
         char *LeaderBoard = NULL; // Stores the leaderboard
         res = recv(client_FileDescriptor, &sizeLeaderboard, sizeof(sizeLeaderboard), 0);
@@ -181,34 +185,49 @@ int main(void)
             exit(EXIT_SUCCESS);
         }
         else
-            {
-                //create array according to size of leaderboard
-                LeaderBoard = malloc(sizeLeaderboard + 1); // +1 for null character
-                LeaderBoard[sizeLeaderboard] = '\0'; // set last index to null
-                // get the leaderboard
-                res = recv(client_FileDescriptor , LeaderBoard , sizeLeaderboard,0 );
-                if(res == -1)
-                {
-                    perror("Error on Receive");
-                    close(client_FileDescriptor);
-                    exit(EXIT_FAILURE);
-                }
-                else if( res == 0)
-                {
-                    perror("Connectin Closed , Could not get Leaderboard, Error: \n");
-                    close(client_FileDescriptor);
-                    exit(EXIT_SUCCESS);
-                } 
-                else
-                {
-                    printf("------ LEADERBOARD --------- \n \n");
-                    printf("%s \n" , LeaderBoard);
-                    
-                } 
-            }  
+        {
+            //create array according to size of leaderboard
+            LeaderBoard = malloc(sizeLeaderboard + 1); // +1 for null character
+            LeaderBoard[sizeLeaderboard] = '\0'; // set last index to null
             
+            // get the leaderboard
+            res = recv(client_FileDescriptor , LeaderBoard , sizeLeaderboard, 0 );
+            if(res == -1)
+            {
+                perror("Error on Receive");
+                close(client_FileDescriptor);
+                exit(EXIT_FAILURE);
+            }
+            else if( res == 0)
+            {
+                perror("Connection Closed , Could not get Leaderboard, Error: \n");
+                close(client_FileDescriptor);
+                exit(EXIT_SUCCESS);
+            } 
+            else
+            {
+                printf("------ LEADERBOARD --------- \n \n");
+                printf("%s \n" , LeaderBoard);
+            } 
+        }
 
-     close(client_FileDescriptor);
-     return EXIT_SUCCESS;
+        // Ready up for the next round
+        char ready = '\0';
+        do {
+            printf("Press 'R' to ready up for the next round: ");
+            scanf(" %c", &ready);
+            ready = toupper(ready); // Convert to uppercase in case user enters lowercase 'r'
+        } while (ready != 'R');
+
+        // Send ready signal to server
+        res = send(client_FileDescriptor, &ready, sizeof(ready), 0);
+        if (res == -1) {
+            perror("Failed to send ready signal to server\n");
+            close(client_FileDescriptor);
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    close(client_FileDescriptor);
+    return EXIT_SUCCESS;
 }
-
