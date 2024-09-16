@@ -7,6 +7,11 @@
 char *stringInput(char prompt[]){
     char temp[100]; // temporary char[] to get input
     printf("%s : " , prompt);
+
+    //handling for max players (no more than 6)
+    //mid round joins
+    //mid round disconnects
+    //multiple rounds
     
         if(fgets(temp,sizeof(temp) , stdin) != NULL){ // get input from user which does not exceed size of temp
             // removing the new line character
@@ -160,6 +165,17 @@ int addToGuessList(char **guesslist , char guessedWord)
 
 void Hungman(int lives){
     switch (lives) {
+    case 8:
+        printf("      \n");
+        printf("      \n");
+        printf("      \n");
+        printf("      \n");
+        printf("      \n");
+        printf("      \n");
+        printf("=========\n");
+
+
+    break;
     case 7:
 
         printf("      |\n");
@@ -219,7 +235,7 @@ void Hungman(int lives){
         printf("  +---+\n");
         printf("  |   |\n");
         printf("  O   |\n");
-        printf(" /|\\   |\n");
+        printf(" /|\\  |\n");
         printf("      |\n");
         printf("      |\n");
         printf("=========\n");
